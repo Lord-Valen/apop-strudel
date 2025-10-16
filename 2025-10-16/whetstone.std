@@ -1,0 +1,130 @@
+$: s("<~ [crow | growl | growl2 | growl3 | gribble | wibble | rattle | laugh | slam]? ~!6>")
+  .gain(0.5)
+  .delay(0.2)
+  .room(1) // lol
+
+_$: s("growl")
+
+samples({
+  growl: 'monster-growl-390285.wav',
+  growl2: 'monster-12-337346.mp3',
+  growl3: 'sound-266020.mp3',
+  gribble: 'game-creature-90736.mp3',
+  wibble: 'creature-106758.mp3',
+  rattle: 'rattle.mp3',
+  laugh: 'diabolic-laugh-202978.mp3',
+  slam: 'wooden-door-slamming-close-79934.mp3',
+}, 'https://apop-strudel-samples.s3.us-east-1.amazonaws.com/')
+
+$: "<Gm@2 Ao7 DM>".layer(
+    x => x.rootNotes(4).note(),
+    x => x.voicing()
+  )
+  .vowel("<oe@2 oe an>")
+  .sound("gm_choir_aahs")
+  .lpf(400)
+  .gain(.4)
+  ._pianoroll({labels:true})
+
+$: stack(
+  arrange(
+    [2, "0 0 4"],
+    [3, "4 4 0"]
+  )
+  .n()
+  .scale("g2:minor")
+  .sound("square")
+  .lpf("300")
+  .n(8)
+  .vib(".2")
+  .vibmod("<.25 .5 1 .7 .1>")
+  .room(1)
+  .gain(".4 .8 .5 .3").orbit(2)
+  ._scope({scale:1}),
+
+  arrange(
+    [2, "0 0 4"],
+    [3, "4 4 0"]
+  )
+  .n()
+  .scale("g1:minor")
+  .sound("sine")
+  .n(8)
+  .vib(".2")
+  .vibmod("<.25 .5 1 .7 .1>")
+  .gain(".4 .8 .5 .3").gain(1.7)
+  .orbit(2)
+)._pianoroll({labels:true})
+
+
+$: s("crackle*2").density(perlin.range(.2, .4).seg(40)).gain(.3)._scope()
+
+$: note("<g3 g3 g3@2 ~@5>").sound("<saw>")
+  .n("<32 24 8@2 ~@5>")
+  .vib(1)
+  .gain(0.7)
+  .hpf(3000)
+  ._scope()
+$: note(tri.range(30,38).clip(3).seg(33))
+  ._pianoroll()
+
+$: sound("pink*4")
+  .gain(perlin.range(.1, .2).seg(100))
+  .room(1)
+  ._scope()
+
+$: sound("~ gm_kalimba")
+
+$: sound("gm_oboe, gm_pad_choir")
+  .n(irand(5))
+  .scale("g3:minor:pentatonic")
+  .gain(".3")
+
+$: sound("gm_glockenspiel [gm_glockenspiel | gm_glockenspiel*2] gm_glockenspiel")
+  .n(irand(4))
+  .scale("g5:minor:pentatonic")
+  .gain(".5")
+  .rarely(x=>x.jux(rev))
+  .delay(0.5)
+  .delayt(.1)
+  .delayfb(.15)
+  .room(1)
+  ._pianoroll()
+
+$: sound("gm_clarinet gm_clarinet gm_clarinet gm_clarinet")
+   .n(irand(3))
+   .scale("g6:minor:pentatonic")
+   .gain(".2")
+   .room(1)
+
+$: sound("gm_viola!2")
+  .n(irand(5))
+  .degradeBy(.5)
+  .clip(1.1)
+  .attack(0.2)
+  .decay(.8)
+  .scale("g3:minor:pentatonic")
+  .gain(".8")
+  .chorus(".7").room(".4")
+  ._pianoroll()
+
+// Drums
+$: stack(
+  sound("hh hh hh hh <hh hh [hh hh ~] hh hh [ ~ hh hh]> oh")
+  .adsr("0:0.2:0:0.2")
+  .delay(0.2).delayt(1/3)
+  .room(0.3).lpf(7000)
+  .velocity("0.4 1 0.4 0.4 1 1").postgain("0.25"),
+  
+  sound("- - - <sd sd [sd sd ~] sd> - -")
+  .adsr("0:0.2:0:0.2")
+  .delay(0.2).delayt(1/3)
+  .room(1.5).lpf(7000).postgain(0.4),
+  
+  sound("bd - bd - - -")
+  .distort(1.3).distorttype("scurve")
+  .adsr("0:.5:0:.2")
+  //.delay(0.2).delayt(1/3)
+  .room(0.3).lpf(7000).postgain(0.4)
+  .duck(2).duckdepth(0.6).duckattack(0.6)
+).bank("RolandTR707").compressor("1.01: 20: 0: 25: 100").palindrome()
