@@ -1,0 +1,32 @@
+setcpm(30)
+
+const anvilRot = n("0 1 2 3 4 5").sound("anvil")
+
+$: anvilRot
+  .cut(1)
+  .speed(0.5)
+  .someCycles(iterBack(3))
+  .sometimes(ply(2))
+  .lpf("3000")
+
+hihat: n("~ 1!2 2 4*2 5 ").sound("anvil")
+  .cut(2)
+  .hpf("7000")
+  .crush(12)
+
+organ: n("5*4").sound("anvil")
+  .speed(0.05)
+  .lpf(1000)
+  .slice(16, 1)
+  .cut(3)
+  .clip(0.2)
+  .gain(0.2)
+  .echo(5, 1/5, .6)
+  .crush(8)
+
+kick: sound("pink")
+  .struct("1*2")
+  .clip(0.15)
+  .lpf(400)
+  .distort(1)
+  .adsr(.1,.2,.6,.3)
